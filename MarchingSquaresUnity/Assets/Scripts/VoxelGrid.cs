@@ -20,7 +20,6 @@ public class VoxelGrid : MonoBehaviour {
     }
   }
 
-  // Test
   private void CreateVoxel(int i, int x, int y) {
     GameObject o = Instantiate(voxelPrefab) as GameObject;
     // Make new objects children of VoxelGrid object

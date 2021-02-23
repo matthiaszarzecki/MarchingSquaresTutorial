@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class VoxelMap : MonoBehaviour {
-
   public float size = 2f;
 
   public int voxelResolution = 8;
@@ -19,6 +18,10 @@ public class VoxelMap : MonoBehaviour {
     halfSize = size * 0.5f;
     chunkSize = size / chunkResolution;
     voxelSize = chunkSize / voxelResolution;
+
+    // Add Collider
+    BoxCollider box = gameObject.AddComponent<BoxCollider>();
+    box.size = new Vector3(size, size);
 
     chunks = new VoxelGrid[chunkResolution * chunkResolution];
     for (int i = 0, y = 0; y < chunkResolution; y++) {
