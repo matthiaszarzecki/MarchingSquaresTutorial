@@ -54,9 +54,7 @@ public class VoxelMap : MonoBehaviour {
     chunks[chunkY * chunkResolution + chunkX].SetVoxel(voxelX, voxelY, true);
   }
 
-  public void SetVoxel(int x, int y, bool state) {
-    voxels[y * resolution + x] = state;
-  }
+  
 
   private void CreateChunk(int i, int x, int y) {
     VoxelGrid chunk = Instantiate(voxelGridPrefab) as VoxelGrid;
