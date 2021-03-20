@@ -16,12 +16,17 @@ public class VoxelMap : MonoBehaviour {
 
   private static string[] fillTypeNames = { "Filled", "Empty" };
 
-  private int fillTypeIndex;
+
+  private static string[] radiusNames = { "0", "1", "2", "3", "4", "5" };
+
+  private int fillTypeIndex, radiusIndex;
 
   private void OnGUI() {
     GUILayout.BeginArea(new Rect(4f, 4f, 150f, 500f));
     GUILayout.Label("Fill Type");
     fillTypeIndex = GUILayout.SelectionGrid(fillTypeIndex, fillTypeNames, 2);
+    GUILayout.Label("Radius");
+    radiusIndex = GUILayout.SelectionGrid(radiusIndex, radiusNames, 6);
     GUILayout.EndArea();
   }
 
@@ -54,18 +59,17 @@ public class VoxelMap : MonoBehaviour {
   }
 
   private void EditVoxels(Vector3 point) {
-    int voxelX = (int)((point.x + halfSize) / voxelSize);
-    int voxelY = (int)((point.y + halfSize) / voxelSize);
-    int chunkX = voxelX / voxelResolution;
-    int chunkY = voxelY / voxelResolution;
-
-    Debug.Log(voxelX + ", " + voxelY + " in chunk " + chunkX + ", " + chunkY);
-    voxelX -= chunkX * voxelResolution;
-    voxelY -= chunkY * voxelResolution;
+    int centerX = (int)((point.x + halfSize) / voxelSize);
+    int centerY = (int)((point.y + halfSize) / voxelSize);
+    int chunkX = centerX / voxelResolution;
+    int chunkY = centerY / voxelResolution;
+    centerX -= chunkX * voxelResolution;
+    centerY -= chunkY * voxelResolution;
 
     VoxelStencil activeStencil = new VoxelStencil();
-    activeStencil.Initialize(fillTypeIndex == 0);
-    chunks[chunkY * chunkResolution + chunkX].Apply(voxelX, voxelY, activeStencil);
+    activeStencil.Initialize(fillTypeIndex == 0, radiusIndex);
+    activeStencil.SetCenter(centerX, centerY);
+    chunks[chunkY * chunkResolution + chunkX].Apply(activeStencil);
   }
 
   private void CreateChunk(int i, int x, int y) {
