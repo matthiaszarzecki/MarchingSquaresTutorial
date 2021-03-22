@@ -61,15 +61,38 @@ public class VoxelMap : MonoBehaviour {
   private void EditVoxels(Vector3 point) {
     int centerX = (int)((point.x + halfSize) / voxelSize);
     int centerY = (int)((point.y + halfSize) / voxelSize);
-    int chunkX = centerX / voxelResolution;
-    int chunkY = centerY / voxelResolution;
-    centerX -= chunkX * voxelResolution;
-    centerY -= chunkY * voxelResolution;
+
+    int xStart = (centerX - radiusIndex) / voxelResolution;
+    if (xStart < 0) {
+      xStart = 0;
+    }
+    int xEnd = (centerX + radiusIndex) / voxelResolution;
+    if (xEnd >= chunkResolution) {
+      xEnd = chunkResolution - 1;
+    }
+    int yStart = (centerY - radiusIndex) / voxelResolution;
+    if (yStart < 0) {
+      yStart = 0;
+    }
+    int yEnd = (centerY + radiusIndex) / voxelResolution;
+    if (yEnd >= chunkResolution) {
+      yEnd = chunkResolution - 1;
+    }
 
     VoxelStencil activeStencil = new VoxelStencil();
     activeStencil.Initialize(fillTypeIndex == 0, radiusIndex);
-    activeStencil.SetCenter(centerX, centerY);
-    chunks[chunkY * chunkResolution + chunkX].Apply(activeStencil);
+
+    int voxelYOffset = yStart * voxelResolution;
+    for (int y = yStart; y <= yEnd; y++) {
+      int i = y * chunkResolution + xStart;
+      int voxelXOffset = xStart * voxelResolution;
+      for (int x = xStart; x <= xEnd; x++, i++) {
+        activeStencil.SetCenter(centerX - voxelXOffset, centerY - voxelYOffset);
+        chunks[i].Apply(activeStencil);
+        voxelXOffset += voxelResolution;
+      }
+      voxelYOffset += voxelResolution;
+    }
   }
 
   private void CreateChunk(int i, int x, int y) {

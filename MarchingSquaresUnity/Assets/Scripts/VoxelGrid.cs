@@ -34,9 +34,21 @@ public class VoxelGrid : MonoBehaviour {
 
   public void Apply(VoxelStencil stencil) {
     int xStart = stencil.XStart;
+    if (xStart < 0) {
+      xStart = 0;
+    }
     int xEnd = stencil.XEnd;
+    if (xEnd >= resolution) {
+      xEnd = resolution - 1;
+    }
     int yStart = stencil.YStart;
+    if (yStart < 0) {
+      yStart = 0;
+    }
     int yEnd = stencil.YEnd;
+    if (yEnd >= resolution) {
+      yEnd = resolution - 1;
+    }
 
     for (int y = yStart; y <= yEnd; y++) {
       int i = y * resolution + xStart;
