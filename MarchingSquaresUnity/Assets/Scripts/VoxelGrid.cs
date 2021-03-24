@@ -6,7 +6,7 @@ public class VoxelGrid : MonoBehaviour {
   public int resolution;
   public GameObject voxelPrefab;
 
-  private bool[] voxels;
+  private Voxel[] voxels;
   private float voxelSize;
 
   private Material[] voxelMaterials;
@@ -29,12 +29,16 @@ public class VoxelGrid : MonoBehaviour {
       }
     }
 
-    SetVoxelColors();
+    GetComponent<MeshFilter>().mesh = mesh = new Mesh();
+    mesh.name = "VoxelGrid Mesh";
+    vertices = new List<Vector3>();
+    triangles = new List<int>();
+    Refresh();
   }
 
   private void SetVoxelColors() {
     for (int i = 0; i < voxels.Length; i++) {
-      voxelMaterials[i].color = voxels[i] ? Color.black : Color.white;
+      voxelMaterials[i].color = voxels[i].state ? Color.black : Color.white;
     }
   }
 
@@ -59,10 +63,27 @@ public class VoxelGrid : MonoBehaviour {
     for (int y = yStart; y <= yEnd; y++) {
       int i = y * resolution + xStart;
       for (int x = xStart; x <= xEnd; x++, i++) {
-        voxels[i] = stencil.Apply(x, y, voxels[i]);
+        voxels[i].state = stencil.Apply(x, y, voxels[i].state);
       }
     }
+
+    Refresh();
+  }
+
+  private void Refresh() {
     SetVoxelColors();
+    Triangulate();
+  }
+
+  private void Triangulate() {
+    vertices.Clear();
+    triangles.Clear();
+    mesh.Clear();
+
+    TriangulateCellRows();
+
+    mesh.vertices = vertices.ToArray();
+    mesh.triangles = triangles.ToArray();
   }
 
   private void CreateVoxel(int i, int x, int y) {
@@ -76,5 +97,7 @@ public class VoxelGrid : MonoBehaviour {
     //o.transform.localScale = voxelScale;
 
     voxelMaterials[i] = o.GetComponent<MeshRenderer>().material;
+
+    voxels[i] = new Voxel(x, y, voxelSize);
   }
 }
