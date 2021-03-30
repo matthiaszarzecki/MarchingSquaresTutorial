@@ -86,6 +86,35 @@ public class VoxelGrid : MonoBehaviour {
     mesh.triangles = triangles.ToArray();
   }
 
+  private void TriangulateCellRows() {
+    int cells = resolution - 1;
+    for (int i = 0, y = 0; y < cells; y++, i++) {
+      for (int x = 0; x < cells; x++, i++) {
+        TriangulateCell(
+          voxels[i],
+          voxels[i + 1],
+          voxels[i + resolution],
+          voxels[i + resolution + 1]);
+      }
+    }
+  }
+
+  private void TriangulateCell(Voxel a, Voxel b, Voxel c, Voxel d) {
+    int cellType = 0;
+    if (a.state) {
+      cellType |= 1;
+    }
+    if (b.state) {
+      cellType |= 2;
+    }
+    if (c.state) {
+      cellType |= 4;
+    }
+    if (d.state) {
+      cellType |= 8;
+    }
+  }
+
   private void CreateVoxel(int i, int x, int y) {
     GameObject o = Instantiate(voxelPrefab) as GameObject;
     // Make new objects children of VoxelGrid object
