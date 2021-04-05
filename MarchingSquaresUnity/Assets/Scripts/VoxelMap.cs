@@ -2,25 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Creates and handles the entire Voxel-Display.
 public class VoxelMap : MonoBehaviour {
   public float size = 2f;
-
   public int voxelResolution = 8;
   public int chunkResolution = 2;
-
   public VoxelGrid voxelGridPrefab;
 
   private VoxelGrid[] chunks;
-
-  private float chunkSize, voxelSize, halfSize;
+  private float chunkSize;
+  private float voxelSize;
+  private float halfSize;
+  private int fillTypeIndex;
+  private int radiusIndex;
+  private int stencilIndex;
 
   private static string[] fillTypeNames = { "Filled", "Empty" };
-
   private static string[] radiusNames = { "0", "1", "2", "3", "4", "5" };
-
   private static string[] stencilNames = { "Square", "Circle" };
-
-  private int fillTypeIndex, radiusIndex, stencilIndex;
 
   private VoxelStencil[] stencils = {
     new VoxelStencil(),
@@ -74,14 +73,17 @@ public class VoxelMap : MonoBehaviour {
     if (xStart < 0) {
       xStart = 0;
     }
+
     int xEnd = (centerX + radiusIndex) / voxelResolution;
     if (xEnd >= chunkResolution) {
       xEnd = chunkResolution - 1;
     }
+
     int yStart = (centerY - radiusIndex - 1) / voxelResolution;
     if (yStart < 0) {
       yStart = 0;
     }
+
     int yEnd = (centerY + radiusIndex) / voxelResolution;
     if (yEnd >= chunkResolution) {
       yEnd = chunkResolution - 1;
@@ -113,6 +115,7 @@ public class VoxelMap : MonoBehaviour {
     if (x > 0) {
       chunks[i - 1].xNeighbor = chunk;
     }
+
     if (y > 0) {
       chunks[i - chunkResolution].yNeighbor = chunk;
       if (x > 0) {

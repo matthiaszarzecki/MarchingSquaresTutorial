@@ -5,20 +5,20 @@ using System.Collections.Generic;
 public class VoxelGrid : MonoBehaviour {
   public int resolution;
   public GameObject voxelPrefab;
+  public VoxelGrid xNeighbor;
+  public VoxelGrid yNeighbor;
+  public VoxelGrid xyNeighbor;
 
   private Voxel[] voxels;
-  private float voxelSize, gridSize;
-
-  private Voxel dummyX, dummyY, dummyT;
-
+  private float voxelSize;
+  private float gridSize;
+  private Voxel dummyX;
+  private Voxel dummyY;
+  private Voxel dummyT;
   private Material[] voxelMaterials;
-
   private Mesh mesh;
-
   private List<Vector3> vertices;
   private List<int> triangles;
-
-  public VoxelGrid xNeighbor, yNeighbor, xyNeighbor;
 
   public void Initialize(int resolution, float size) {
     this.resolution = resolution;
@@ -43,6 +43,21 @@ public class VoxelGrid : MonoBehaviour {
     vertices = new List<Vector3>();
     triangles = new List<int>();
     Refresh();
+  }
+
+  private void CreateVoxel(int i, int x, int y) {
+    GameObject element = Instantiate(voxelPrefab) as GameObject;
+
+    // Make new objects children of VoxelGrid object
+    element.transform.parent = transform;
+    element.transform.localPosition = new Vector3((x + 0.5f) * voxelSize, (y + 0.5f) * voxelSize, -0.01f);
+    element.transform.localScale = Vector3.one * voxelSize * 0.1f;
+
+    // Assign Material
+    voxelMaterials[i] = element.GetComponent<MeshRenderer>().material;
+
+    voxels[i] = new Voxel(x, y, voxelSize);
+    voxels[i] = new Voxel(x, y, voxelSize);
   }
 
   private void SetVoxelColors() {
@@ -253,21 +268,5 @@ public class VoxelGrid : MonoBehaviour {
     triangles.Add(vertexIndex);
     triangles.Add(vertexIndex + 3);
     triangles.Add(vertexIndex + 4);
-  }
-
-  private void CreateVoxel(int i, int x, int y) {
-    GameObject o = Instantiate(voxelPrefab) as GameObject;
-    // Make new objects children of VoxelGrid object
-    o.transform.parent = transform;
-    o.transform.localPosition = new Vector3((x + 0.5f) * voxelSize, (y + 0.5f) * voxelSize, -0.01f);
-    o.transform.localScale = Vector3.one * voxelSize * 0.1f;
-
-    //Vector3 voxelScale = Vector3.one * voxelSize * 0.9f;
-    //o.transform.localScale = voxelScale;
-
-    voxelMaterials[i] = o.GetComponent<MeshRenderer>().material;
-
-    voxels[i] = new Voxel(x, y, voxelSize);
-    voxels[i] = new Voxel(x, y, voxelSize);
   }
 }

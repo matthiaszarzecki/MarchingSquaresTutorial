@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System;
 
+// A single Voxel Element.
 [Serializable]
 public class Voxel {
-
   public bool state;
-
-  public Vector2 position, xEdgePosition, yEdgePosition;
+  public Vector2 position;
+  public Vector2 xEdgePosition;
+  public Vector2 yEdgePosition;
 
   public Voxel(int x, int y, float size) {
     position.x = (x + 0.5f) * size;
