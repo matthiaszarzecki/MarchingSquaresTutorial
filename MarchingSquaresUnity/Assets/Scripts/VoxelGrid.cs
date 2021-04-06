@@ -3,18 +3,26 @@ using System.Collections.Generic;
 
 [SelectionBase]
 public class VoxelGrid : MonoBehaviour {
+  // Width and Length of the square display
   public int resolution;
+
   public GameObject voxelPrefab;
   public VoxelGrid xNeighbor;
   public VoxelGrid yNeighbor;
   public VoxelGrid xyNeighbor;
 
+  // All the voxels/elements in a linear array
   private Voxel[] voxels;
+
+  // The actual size of each voxel. Gets computed on startup.
   private float voxelSize;
   private float gridSize;
   private Voxel dummyX;
   private Voxel dummyY;
   private Voxel dummyT;
+
+  // Array of materials that are the same length as the
+  // voxels-array. Each element corresponds to 1 voxel.
   private Material[] voxelMaterials;
   private Mesh mesh;
   private List<Vector3> vertices;
@@ -23,7 +31,11 @@ public class VoxelGrid : MonoBehaviour {
   public void Initialize(int resolution, float size) {
     this.resolution = resolution;
     gridSize = size;
+
+    // Calculate the actual size of each element.
     voxelSize = size / resolution;
+
+    // Create array of exact size to fit all elements
     voxels = new Voxel[resolution * resolution];
 
     voxelMaterials = new Material[voxels.Length];
@@ -57,9 +69,9 @@ public class VoxelGrid : MonoBehaviour {
     voxelMaterials[i] = element.GetComponent<MeshRenderer>().material;
 
     voxels[i] = new Voxel(x, y, voxelSize);
-    voxels[i] = new Voxel(x, y, voxelSize);
   }
 
+  // Set colors for ALL elements depending on their state.
   private void SetVoxelColors() {
     for (int i = 0; i < voxels.Length; i++) {
       voxelMaterials[i].color = voxels[i].state ? Color.black : Color.white;
