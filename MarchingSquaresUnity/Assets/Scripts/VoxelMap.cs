@@ -17,10 +17,12 @@ public class VoxelMap : MonoBehaviour {
   private int radiusIndex;
   private int stencilIndex;
 
+  // UI Options
   private static string[] fillTypeNames = { "Filled", "Empty" };
   private static string[] radiusNames = { "0", "1", "2", "3", "4", "5" };
   private static string[] stencilNames = { "Square", "Circle" };
 
+  // Selection of Stencils
   private VoxelStencil[] stencils = {
     new VoxelStencil(),
     new VoxelStencilCircle()
