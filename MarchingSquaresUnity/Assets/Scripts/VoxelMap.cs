@@ -7,9 +7,9 @@ public class VoxelMap : MonoBehaviour {
   public float size = 2f;
   public int voxelResolution = 8;
   public int chunkResolution = 2;
-  public VoxelGrid voxelGridPrefab;
+  public VoxelChunk voxelChunkPrefab;
 
-  private VoxelGrid[] chunks;
+  private VoxelChunk[] chunks;
   private float chunkSize;
   private float voxelSize;
   private float halfSize;
@@ -23,9 +23,9 @@ public class VoxelMap : MonoBehaviour {
   private static string[] stencilNames = { "Square", "Circle" };
 
   // Selection of Stencils
-  private VoxelStencil[] stencils = {
-    new VoxelStencil(),
-    new VoxelStencilCircle()
+  private Stencil[] stencils = {
+    new Stencil(),
+    new StencilCircle()
   };
 
   private void OnGUI() {
@@ -48,7 +48,7 @@ public class VoxelMap : MonoBehaviour {
     BoxCollider box = gameObject.AddComponent<BoxCollider>();
     box.size = new Vector3(size, size);
 
-    chunks = new VoxelGrid[chunkResolution * chunkResolution];
+    chunks = new VoxelChunk[chunkResolution * chunkResolution];
     for (int i = 0, y = 0; y < chunkResolution; y++) {
       for (int x = 0; x < chunkResolution; x++, i++) {
         CreateChunk(i, x, y);
@@ -91,7 +91,7 @@ public class VoxelMap : MonoBehaviour {
       yEnd = chunkResolution - 1;
     }
 
-    VoxelStencil activeStencil = stencils[stencilIndex];
+    Stencil activeStencil = stencils[stencilIndex];
     activeStencil.Initialize(fillTypeIndex == 0, radiusIndex);
 
     int voxelYOffset = yEnd * voxelResolution;
@@ -108,7 +108,7 @@ public class VoxelMap : MonoBehaviour {
   }
 
   private void CreateChunk(int i, int x, int y) {
-    VoxelGrid chunk = Instantiate(voxelGridPrefab) as VoxelGrid;
+    VoxelChunk chunk = Instantiate(voxelChunkPrefab) as VoxelChunk;
     chunk.Initialize(voxelResolution, chunkSize);
     chunk.transform.parent = transform;
     chunk.transform.localPosition = new Vector3(x * chunkSize - halfSize, y * chunkSize - halfSize);
