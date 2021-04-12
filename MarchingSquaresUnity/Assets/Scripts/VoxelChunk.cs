@@ -39,6 +39,7 @@ public class VoxelChunk : MonoBehaviour {
     // Create array of exact size to fit all elements
     voxels = new SingleVoxel[resolution * resolution];
 
+    // Create an array to hold the material for each single element.
     voxelMaterials = new Material[voxels.Length];
 
     dummyX = new SingleVoxel();
