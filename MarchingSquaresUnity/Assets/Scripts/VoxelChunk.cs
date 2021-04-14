@@ -174,6 +174,13 @@ public class VoxelChunk : MonoBehaviour {
   }
 
   private void TriangulateCell(SingleVoxel a, SingleVoxel b, SingleVoxel c, SingleVoxel d) {
+    // The bitwise OR assignment operator (|=) uses the binary representation of both operands,
+    // does a bitwise OR operation on them and assigns the result to the variable.
+    // let a = 5;      // 00000000000000000000000000000101
+    // a |= 3;         // 00000000000000000000000000000011
+    // console.log(a); // 00000000000000000000000000000111
+    // expected output: 7
+
     int cellType = 0;
     if (a.state) {
       cellType |= 1;
