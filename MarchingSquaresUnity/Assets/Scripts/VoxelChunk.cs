@@ -181,6 +181,28 @@ public class VoxelChunk : MonoBehaviour {
     // console.log(a); // 00000000000000000000000000000111
     // expected output: 7
 
+
+
+    // 16 Celltypes
+    // 
+    // XX - 0 Corners marked, type 0
+    // XX
+    //
+    // XX - 1 Corner marked, type 1, 2, 4, 8
+    // #X
+    //
+    // XX - 2 Corners on the same side marked, type 3, 5, 10, 12
+    // ##
+    //
+    // X# - 3 Corners on the same side marked, type 7, 11, 13, 14
+    // ##
+    //
+    // ## - 4 Corners marked, type 15
+    // ##
+    //
+    // #X - 2 opposing Corners marked, type 6, 9
+    // X#
+
     int cellType = 0;
     if (a.state) {
       cellType |= 1;
